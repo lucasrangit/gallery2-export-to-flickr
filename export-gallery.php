@@ -126,13 +126,13 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						WHERE ce.".DATABASE_COLUMN_PREFIX."parentId=".$row[DATABASE_COLUMN_PREFIX."id"]."
 						ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
 				$childern = mysql_query($query);
-				echo "<ul>\n";
+				echo "\t\t<ul>\n";
 				while ($child = mysql_fetch_assoc($childern)) {
 						$query = "SELECT i.".DATABASE_COLUMN_PREFIX."parentSequence FROM ".DATABASE_TABLE_PREFIX."ItemAttributesMap i WHERE i.".DATABASE_COLUMN_PREFIX."itemId =".$child[DATABASE_COLUMN_PREFIX."id"];
 						$result_temp = mysql_query($query);
 						$temp = mysql_fetch_array($result_temp);
 						$path = BASE_DIRECTORY."/albums/".fullpath($temp[0],$child[DATABASE_COLUMN_PREFIX."id"]);
-						echo "<li>".$child[DATABASE_COLUMN_PREFIX."title"]." -- ".$child[DATABASE_COLUMN_PREFIX."pathComponent"]."<br/>".$child[DATABASE_COLUMN_PREFIX."description"]." File is ".$path."</li>\n";
+						echo "\t\t\t<li>".$child[DATABASE_COLUMN_PREFIX."title"]." -- ".$child[DATABASE_COLUMN_PREFIX."pathComponent"]."<br/>".$child[DATABASE_COLUMN_PREFIX."description"]." File is ".$path."</li>\n";
 						//	continue;
 
 						if (!is_readable($path)) {
@@ -174,6 +174,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						echo "\nAdding $path to setid['id'] '".$setid['id']."'\n";
 				}
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
+		echo "</ul>\n";
 		}
 
 function fullpath($parents,$id){
