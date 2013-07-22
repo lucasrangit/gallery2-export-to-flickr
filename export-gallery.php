@@ -44,6 +44,7 @@
  * Taj Morton -- tajmorton@gmail.com -- Nov 3, 2006
  */
 
+// Read configuration file
 if ( 1 >= $argc ) {
 	echo "Please pass location of a config.php\n";
 	exit(1);
