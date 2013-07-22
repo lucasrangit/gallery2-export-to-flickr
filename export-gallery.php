@@ -102,7 +102,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 
 
 		while ($row = mysql_fetch_assoc($result)) {
-				$query = "SELECT * FROM ".DATABASE_TABLE_PREFIX."ChildEntity i INNER JOIN " .DATABASE_TABLE_PREFIX."PhotoItem fse ON i." .DATABASE_COLUMN_PREFIX."id = fse.".DATABASE_COLUMN_PREFIX."id where i.g_parentId = ".$row[DATABASE_COLUMN_PREFIX."id"];
+				$query = "SELECT * FROM ".DATABASE_TABLE_PREFIX."ChildEntity i INNER JOIN " .DATABASE_TABLE_PREFIX."PhotoItem fse ON i." .DATABASE_COLUMN_PREFIX."id = fse.".DATABASE_COLUMN_PREFIX."id where i.".DATABASE_COLUMN_PREFIX."parentId = ".$row[DATABASE_COLUMN_PREFIX."id"];
 				//echo "\n$query\n";
 				$result_temp = mysql_query($query) or print(mysql_error());
 				if (mysql_num_rows($result_temp)==0) continue;
