@@ -46,13 +46,13 @@
 
 // Read configuration file
 if ( 1 >= $argc ) {
-		echo "Please pass location of a config.php\n";
+		echo "\nPlease pass location of a config.php\n";
 		exit(1);
 }
 else {
 		require_once("$argv[1]");
 		if ( empty($DATABASE_HOST) ) {
-				echo "Please pass location of a config.php\n";
+				echo "\nPlease pass location of a config.php\n";
 				exit(1);
 		}
 }
@@ -139,7 +139,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 												null, // tags
 												true); // public 
 						} else {
-							echo "uploading $path\n";
+							echo "\nuploading $path\n";
 						}
 
 						if (count($uploadedPics)%8) {
@@ -154,15 +154,15 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
 				else
-						echo "creating set ".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."\n"; 
+						echo "\nCreating set ".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."\n"; 
 				if ( ! $dryrun ) {
 						foreach($uploadedPics as $pid) {
-								echo "adding $pid<br/>";
+								echo "\nAdding $pid<br/>";
 								$fes->photosets_addPhoto($setid['id'],$pid);
 						}
 						echo "</li></ul>";
 				} else {
-						echo "adding $path to setid ".$setid['id']."\n";
+						echo "\nAdding $path to setid ".$setid['id']."\n";
 				}
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
 		}
