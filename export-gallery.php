@@ -132,6 +132,11 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						echo "<li>".$child[DATABASE_COLUMN_PREFIX."title"]." -- ".$child[DATABASE_COLUMN_PREFIX."pathComponent"]."<br/>".$child[DATABASE_COLUMN_PREFIX."description"]." File is ".$path."</li>\n";
 						//	continue;
 
+						if (!is_readable($path)) {
+								echo "The file is not readable. Skipping...";
+								continue;
+						}
+
 						if ( ! $dryrun ) {
 								$uploadedPics[]=$f->sync_upload(
 												html_entity_decode($path),
