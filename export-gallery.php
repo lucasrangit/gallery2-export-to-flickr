@@ -57,6 +57,9 @@ else {
 		}
 }
 
+// Dry-run (TODO use getopt() to specify via command-line
+$dryrun = true;
+
 // ------------- You shouldn't need to modify anything below this line: -------------
 
 header("Content-type: text/html");
@@ -128,12 +131,16 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						echo "<li>".$child[DATABASE_COLUMN_PREFIX."title"]." -- ".$child[DATABASE_COLUMN_PREFIX."pathComponent"]."<br/>".$child[DATABASE_COLUMN_PREFIX."description"]." File is ".$path."</li>";
 						//	continue;
 
-						$uploadedPics[]=$f->sync_upload(
-										html_entity_decode($path),
-										html_entity_decode($child[DATABASE_COLUMN_PREFIX."title"]),
-										html_entity_decode($child[DATABASE_COLUMN_PREFIX."description"]),
-										null, // tags
-										true); // public 
+						if ( ! $dryrun ) {
+								$uploadedPics[]=$f->sync_upload(
+												html_entity_decode($path),
+												html_entity_decode($child[DATABASE_COLUMN_PREFIX."title"]),
+												html_entity_decode($child[DATABASE_COLUMN_PREFIX."description"]),
+												null, // tags
+												true); // public 
+						} else {
+							echo "uploading $path\n";
+						}
 
 						if (count($uploadedPics)%8) {
 								// every 8 photos, give flickr a break and a chance
@@ -144,12 +151,19 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						}
 				}
 				//	sleep(2);
-				$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
-				foreach($uploadedPics as $pid) {
-						echo "adding $pid<br/>";
-						$fes->photosets_addPhoto($setid['id'],$pid);
+				if ( ! $dryrun )	
+						$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
+				else
+						echo "creating set ".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."\n"; 
+				if ( ! $dryrun ) {
+						foreach($uploadedPics as $pid) {
+								echo "adding $pid<br/>";
+								$fes->photosets_addPhoto($setid['id'],$pid);
+						}
+						echo "</li></ul>";
+				} else {
+						echo "adding $path to setid ".$setid['id']."\n";
 				}
-				echo "</li></ul>";
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
 		}
 echo "</ul>";
