@@ -159,7 +159,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								sleep(3);
 						}
 				}
-				echo "</ul>\n";
+				echo "\t\t</ul></li>\n";
 				//	sleep(2);
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
