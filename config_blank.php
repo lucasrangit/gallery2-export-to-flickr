@@ -9,4 +9,6 @@ define("API_KEY","");
 define("SECRET","");
 define("TOKEN","");
 define("BASE_DIRECTORY",""); // $gallery->setConfig('data.gallery.base',...
+define("LOG_FILE","log.html");	// HTML log file
+define("GALLERY_OWNER", "");	// Owner ID of the photos to export
 ?>
