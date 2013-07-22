@@ -90,29 +90,32 @@ if (!$db) {
 // skip NULL pathComponents because it probably means that we've either found a really messed
 // up album that I'm not going to deal with, or that we've found the "Gallery" album
 $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title, 
-		i.".DATABASE_COLUMN_PREFIX."id, i.".DATABASE_COLUMN_PREFIX."description, 
-		fse.".DATABASE_COLUMN_PREFIX."pathComponent FROM ".DATABASE_TABLE_PREFIX."Item i INNER JOIN 
-		".DATABASE_TABLE_PREFIX."FileSystemEntity fse ON i.".DATABASE_COLUMN_PREFIX."id = 
-		fse.".DATABASE_COLUMN_PREFIX."id WHERE i.".DATABASE_COLUMN_PREFIX."canContainChildren=1 AND 
-		i.".DATABASE_COLUMN_PREFIX."id > ".GALLERY_STARTING_ALBUM." AND
-		i.".DATABASE_COLUMN_PREFIX."ownerId=".GALLERY_OWNER." AND 
-		fse.".DATABASE_COLUMN_PREFIX."pathComponent IS NOT NULL ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
+		i.".DATABASE_COLUMN_PREFIX."id, 
+		i.".DATABASE_COLUMN_PREFIX."description, 
+		fse.".DATABASE_COLUMN_PREFIX."pathComponent 
+		FROM ".DATABASE_TABLE_PREFIX."Item i 
+		INNER JOIN ".DATABASE_TABLE_PREFIX."FileSystemEntity fse 
+		ON i.".DATABASE_COLUMN_PREFIX."id = fse.".DATABASE_COLUMN_PREFIX."id 
+		WHERE i.".DATABASE_COLUMN_PREFIX."canContainChildren=1 
+		AND i.".DATABASE_COLUMN_PREFIX."id > ".GALLERY_STARTING_ALBUM." 
+		AND i.".DATABASE_COLUMN_PREFIX."ownerId=".GALLERY_OWNER." 
+		AND fse.".DATABASE_COLUMN_PREFIX."pathComponent IS NOT NULL 
+		ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
 		//echo $query;
 		$result = mysql_query($query);
-		echo "<ul>\n";
-
 
 		while ($row = mysql_fetch_assoc($result)) {
+				echo "<ul>\n";
 				$query = "SELECT * FROM ".DATABASE_TABLE_PREFIX."ChildEntity i INNER JOIN " .DATABASE_TABLE_PREFIX."PhotoItem fse ON i." .DATABASE_COLUMN_PREFIX."id = fse.".DATABASE_COLUMN_PREFIX."id where i.".DATABASE_COLUMN_PREFIX."parentId = ".$row[DATABASE_COLUMN_PREFIX."id"];
 				//echo "\n$query\n";
 				$result_temp = mysql_query($query) or print(mysql_error());
 				if (mysql_num_rows($result_temp)==0) continue;
 				//  if ($row[DATABASE_COLUMN_PREFIX."id"] < 94950) continue; //used to continue the script from a specific album after it prematurely ends
 
-				echo "<li>Album Title: ".$row[DATABASE_COLUMN_PREFIX."title"]."</li>\n";
-				echo "<li>Album Id: ".$row[DATABASE_COLUMN_PREFIX."id"]."</li>\n";
-				echo "<li>Album Path: ".$row[DATABASE_COLUMN_PREFIX."pathComponent"]."</li>\n";
-				echo "<li>Description: ".$row[DATABASE_COLUMN_PREFIX."description"]."<br/>\n";
+				echo "\t<li>Album Title: ".$row[DATABASE_COLUMN_PREFIX."title"]."</li>\n";
+				echo "\t<li>Album Id: ".$row[DATABASE_COLUMN_PREFIX."id"]."</li>\n";
+				echo "\t<li>Album Path: ".$row[DATABASE_COLUMN_PREFIX."pathComponent"]."</li>\n";
+				echo "\t<li>Description: ".$row[DATABASE_COLUMN_PREFIX."description"]."<br/>\n";
 				$uploadedPics=array();
 
 				$query = "SELECT i.".DATABASE_COLUMN_PREFIX."id, i.".DATABASE_COLUMN_PREFIX."title, i.".DATABASE_COLUMN_PREFIX."description, fse.".DATABASE_COLUMN_PREFIX."pathComponent 
@@ -120,8 +123,8 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						INNER JOIN ".DATABASE_TABLE_PREFIX."ChildEntity ce ON i.".DATABASE_COLUMN_PREFIX."id = ce.".DATABASE_COLUMN_PREFIX."id 
 						INNER JOIN ".DATABASE_TABLE_PREFIX."FileSystemEntity fse ON i.".DATABASE_COLUMN_PREFIX."id = fse.".DATABASE_COLUMN_PREFIX."id 
 						INNER JOIN ".DATABASE_TABLE_PREFIX."PhotoItem gse ON i.".DATABASE_COLUMN_PREFIX."id = gse.".DATABASE_COLUMN_PREFIX."id 
-						WHERE ce.".DATABASE_COLUMN_PREFIX."parentId=".$row[DATABASE_COLUMN_PREFIX."id"].
-						" ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
+						WHERE ce.".DATABASE_COLUMN_PREFIX."parentId=".$row[DATABASE_COLUMN_PREFIX."id"]."
+						ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
 				$childern = mysql_query($query);
 				echo "<ul>\n";
 				while ($child = mysql_fetch_assoc($childern)) {
@@ -145,7 +148,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 												null, // tags
 												true); // public 
 						} else {
-							echo "\nUploading '$path'\n";
+								echo "\nUploading '$path'\n";
 						}
 
 						if (count($uploadedPics)%8) {
@@ -156,6 +159,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								sleep(3);
 						}
 				}
+				echo "</ul>\n";
 				//	sleep(2);
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
@@ -169,10 +173,8 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				} else {
 						echo "\nAdding $path to setid['id'] '".$setid['id']."'\n";
 				}
-				echo "</ul>\n";
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
 		}
-echo "</ul>\n";
 
 function fullpath($parents,$id){
 		$pieces = explode("/", $parents);
