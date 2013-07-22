@@ -47,15 +47,15 @@
 // ------------- You shouldn't need to modify anything below this line: -------------
 
 header("Content-type: text/html");
-
+define("USAGE","Usage: php export-gallery.php config.php\n");
 // Read configuration file
 if ( 1 >= $argc ) {
-		echo "\nPlease pass location of a config.php\n";
+		echo USAGE;
 		exit(1);
 } else {
 		require_once("$argv[1]");
 		if ( ! defined('DATABASE_HOST') ) {
-				echo "\nPlease pass location of a config.php\n";
+				echo USAGE;
 				exit(1);
 		}
 }
