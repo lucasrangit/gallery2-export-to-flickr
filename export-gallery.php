@@ -161,6 +161,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						}
 				}
 				echo "\t\t</ul></li>\n";
+				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n"
 
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(
