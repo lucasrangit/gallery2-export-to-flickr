@@ -1,4 +1,4 @@
-<?ph
+<?php
 /*
  * Gallery 2 to Flickr Import Script
  * 
@@ -11,7 +11,8 @@
  * This script comes with NO WARRANTY or ANYTHING LIKE IT. I am NOT RESPONSIBLE for
  * anything it does. You get to keep all the pieces.
  *
- * To use this script, you must set (or confirm to be correct): 
+ * To use this script, you must set (or confirm to be correct) 
+ * by editing config_blank.php. Pass the file as an argument when you are ready.
  * DATABASE_HOST, DATABASE_USER, DATABASE_PASS, DATABASE_DB,
  * DATABASE_TABLE_PREFIX, DATABASE_COLUMN_PREFIX, FLICKR_API_KEY,
  * FLICKR_SECRET, and BASE_DIRECTORY.
@@ -41,18 +42,19 @@
  *
  * If you have any improvents, please send them to me so I can add them!
  * Taj Morton -- tajmorton@gmail.com -- Nov 3, 2006
-*/
+ */
 
-define("DATABASE_HOST","");   // $storeConfig['hostname']
-define("DATABASE_USER","");        // $storeConfig['username']
-define("DATABASE_PASS","");    // $storeConfig['password']
-define("DATABASE_DB","gallery");      // $storeConfig['database']
-define("DATABASE_TABLE_PREFIX","g2_"); // $storeConfig['tablePrefix']
-define("DATABASE_COLUMN_PREFIX","g_"); // $storeConfig['columnPrefix']
-define("API_KEY","");
-define("SECRET","");
-define("TOKEN","");
-define("BASE_DIRECTORY",""); // $gallery->setConfig('data.gallery.base',...
+if ( 1 >= $argc ) {
+	echo "Please pass location of a config.php\n";
+	exit(1);
+}
+else {
+	require_once("$argv[1]");
+	if ( empty($DATABASE_HOST) ) {
+		echo "Please pass location of a config.php\n";
+		exit(1);
+	}
+}
 
 // ------------- You shouldn't need to modify anything below this line: -------------
 
