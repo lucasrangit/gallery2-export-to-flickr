@@ -139,7 +139,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 												null, // tags
 												true); // public 
 						} else {
-							echo "\nuploading $path\n";
+							echo "\nUploading '$path'\n";
 						}
 
 						if (count($uploadedPics)%8) {
@@ -154,15 +154,15 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),$uploadedPics[0]);
 				else
-						echo "\nCreating set ".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."\n"; 
+						echo "\nCreating set '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'\n"; 
 				if ( ! $dryrun ) {
 						foreach($uploadedPics as $pid) {
-								echo "\nAdding $pid<br/>";
+								echo "\nAdding '$pid'\n";
 								$fes->photosets_addPhoto($setid['id'],$pid);
 						}
 						echo "</li></ul>";
 				} else {
-						echo "\nAdding $path to setid ".$setid['id']."\n";
+						echo "\nAdding $path to setid['id'] '".$setid['id']."'\n";
 				}
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
 		}
