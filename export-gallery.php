@@ -44,14 +44,17 @@
  * Taj Morton -- tajmorton@gmail.com -- Nov 3, 2006
  */
 
+// ------------- You shouldn't need to modify anything below this line: -------------
+
+header("Content-type: text/html");
+
 // Read configuration file
 if ( 1 >= $argc ) {
 		echo "\nPlease pass location of a config.php\n";
 		exit(1);
-}
-else {
+} else {
 		require_once("$argv[1]");
-		if ( empty($DATABASE_HOST) ) {
+		if ( ! defined('DATABASE_HOST') ) {
 				echo "\nPlease pass location of a config.php\n";
 				exit(1);
 		}
@@ -60,9 +63,6 @@ else {
 // Dry-run (TODO use getopt() to specify via command-line
 $dryrun = true;
 
-// ------------- You shouldn't need to modify anything below this line: -------------
-
-header("Content-type: text/html");
 require_once("phpFlickr.php");
 
 $f = new phpFlickr(API_KEY, SECRET);
