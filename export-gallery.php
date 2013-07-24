@@ -177,7 +177,8 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								$fes->photosets_addPhoto($setid['id'],$pid);
 				}
 				//	sleep(3); // take a good fitful sleep after uploading a whole album
-		echo "</ul>\n";
+				mysql_free_result($childern);
+				echo "</ul>\n";
 		}
 
 function fullpath($parents,$id){
