@@ -167,8 +167,8 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 										$uploadedPics[0]); // use first image as required set primary
-				else
-						echo "\nCreating set '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'\n"; 
+				echo "\n\tCreating set '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'\n";
+				echo "\thttp://www.flickr.com/photos/username/sets/".$setid."/\n";
 
 				foreach($uploadedPics as $pid) {
 						echo "\nAdding '$pid'\n";
