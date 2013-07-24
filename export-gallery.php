@@ -62,13 +62,14 @@ if ( 1 >= $argc ) {
 
 // Dry-run (TODO use getopt() to specify via command-line
 $dryrun = true;
+$die_on_error = true;
 
 require_once("phpFlickr.php");
 
-$f = new phpFlickr(API_KEY, SECRET);
+$f = new phpFlickr(API_KEY, SECRET, $die_on_error);
 $f->setToken(TOKEN);
 
-$fes = new phpFlickr(API_KEY, SECRET);
+$fes = new phpFlickr(API_KEY, SECRETi, $die_on_error);
 $fes->setToken(TOKEN);
 
 // need to have 2 phpFlickr objects because for some reason
@@ -167,15 +168,15 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 										$uploadedPics[0]); // use first image as required set primary
-				echo "\n\tCreating set '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'\n";
-				echo "\thttp://www.flickr.com/photos/username/sets/".$setid['id']."/\n";
+				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
+				echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
 
 				foreach($uploadedPics as $pid) {
-						echo "\nAdding '$pid'\n";
+						echo "\tAdding '$pid'\n";
 						if ( ! $dryrun )
 								$fes->photosets_addPhoto($setid['id'],$pid);
 				}
-				//	sleep(3); // take a good fitful sleep after uploading a whole album
+				sleep(3); // take a good fitful sleep after uploading a whole album
 				mysql_free_result($childern);
 				echo "</ul>\n";
 		}
