@@ -110,7 +110,6 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				//echo "\n$query\n";
 				$result_temp = mysql_query($query) or print(mysql_error());
 				if (mysql_num_rows($result_temp)==0) continue;
-				//  if ($row[DATABASE_COLUMN_PREFIX."id"] < 94950) continue; //used to continue the script from a specific album after it prematurely ends
 
 				echo "\t<li>Album Title: ".$row[DATABASE_COLUMN_PREFIX."title"]."</li>\n";
 				echo "\t<li>Album Id: ".$row[DATABASE_COLUMN_PREFIX."id"]."</li>\n";
