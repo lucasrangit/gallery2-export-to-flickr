@@ -69,7 +69,7 @@ require_once("phpFlickr.php");
 $f = new phpFlickr(API_KEY, SECRET, $die_on_error);
 $f->setToken(TOKEN);
 
-$fes = new phpFlickr(API_KEY, SECRETi, $die_on_error);
+$fes = new phpFlickr(API_KEY, SECRET, $die_on_error);
 $fes->setToken(TOKEN);
 
 // need to have 2 phpFlickr objects because for some reason
@@ -162,13 +162,13 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				}
 				echo "\t\t</ul></li>\n";
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
-
+				
+				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
 				if ( ! $dryrun )	
 						$setid=$fes->photosets_create(
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 										$uploadedPics[0]); // use first image as required set primary
-				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
 				echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
 
 				foreach($uploadedPics as $pid) {
@@ -176,6 +176,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						if ( ! $dryrun )
 								$fes->photosets_addPhoto($setid['id'],$pid);
 				}
+
 				sleep(3); // take a good fitful sleep after uploading a whole album
 				mysql_free_result($childern);
 				echo "</ul>\n";
