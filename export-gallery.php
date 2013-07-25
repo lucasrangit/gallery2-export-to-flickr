@@ -145,13 +145,10 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 										null, // tags
 										true); // public 
 
-						if (count($uploadedPics)%8) {
-								// every 8 photos, give flickr a break and a chance
-								// to catch up. Adjust this value if you need to.
-								// Without this sleep, the connection dropped a lot
-								// and I had to keep reuploading the same photos
-								sleep(3);
-						}
+						// give flickr a break and a chance
+						// to catch up. Adjust this value if you need to.
+						// Without this sleep, the connection dropped a lot
+						sleep(1);
 				}
 				echo "\t\t</ul></li>\n";
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
