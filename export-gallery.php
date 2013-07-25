@@ -161,7 +161,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 							$uploadedPics[0]); // use first image as required set primary
 					var_dump($setid);
 					sleep(1);
-				} while ( !is_numeric($setid['id']) || $retry-- );
+				} while ( !is_numeric($setid['id']) && $retry-- );
 				
 				if ( !is_numeric($setid['id']) ) 
 					die('Failed to create a set!\n');
