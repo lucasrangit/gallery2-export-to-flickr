@@ -131,7 +131,6 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						$temp = mysql_fetch_array($result_temp);
 						$path = BASE_DIRECTORY."/albums/".fullpath($temp[0],$child[DATABASE_COLUMN_PREFIX."id"]);
 						echo "\t\t\t<li>".$child[DATABASE_COLUMN_PREFIX."title"]." -- ".$child[DATABASE_COLUMN_PREFIX."pathComponent"]."<br/>".$child[DATABASE_COLUMN_PREFIX."description"]." File is ".$path."</li>\n";
-						//	continue;
 
 						if (!is_readable($path)) {
 								echo "The file is not readable. Skipping...";
