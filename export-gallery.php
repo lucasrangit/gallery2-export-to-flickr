@@ -169,7 +169,10 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 										html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 										$uploadedPics[0]); // use first image as required set primary
-				echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
+				if ( 0 < $setid['id'] )
+					echo 'Failed to create a set!\n';
+				else
+					echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
 				
 				$first = true; // the first photo was already added to the set when created
 				foreach($uploadedPics as $pid) {
