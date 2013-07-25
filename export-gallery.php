@@ -155,17 +155,17 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				}
 				echo "\t\t</ul></li>\n";
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
-				
-				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
+
 				$setid=$fes->photosets_create(
 								html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 								html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 								$uploadedPics[0]); // use first image as required set primary
 				var_dump($setid);
-				if ( 0 < $setid['id'] )
+				if ( !is_numeric($setid['id']) )
 					die('Failed to create a set!\n');
-				else
-					echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
+				
+				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
+				echo "\t<li>Set URL: ".$setid['url']."</li>\n";
 				
 				$first = true; // the first photo was already added to the set when created
 				foreach($uploadedPics as $pid) {
@@ -173,11 +173,9 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								$first = false;
 								continue;
 						}
-						echo "\tAdding '$pid'\n";
 						$fes->photosets_addPhoto($setid['id'],$pid);
 				}
 
-				sleep(3); // take a good fitful sleep after uploading a whole album
 				mysql_free_result($childern);
 				echo "</ul>\n";
 		}
