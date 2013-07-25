@@ -161,8 +161,9 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 								html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 								$uploadedPics[0]); // use first image as required set primary
+				var_dump($setid);
 				if ( 0 < $setid['id'] )
-					echo 'Failed to create a set!\n';
+					die('Failed to create a set!\n');
 				else
 					echo "\t<li>Set URL: http://www.flickr.com/photos/username/sets/".$setid['id']."/</li>\n";
 				
