@@ -60,8 +60,6 @@ if ( 1 >= $argc ) {
 		}
 }
 
-// Dry-run (TODO use getopt() to specify via command-line
-$dryrun = true;
 $die_on_error = true;
 
 require_once("phpFlickr.php");
@@ -140,17 +138,12 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								continue;
 						}
 
-						if ( ! $dryrun ) {
-								$uploadedPics[]=$f->sync_upload(
-												html_entity_decode($path),
-												html_entity_decode($child[DATABASE_COLUMN_PREFIX."title"]),
-												html_entity_decode($child[DATABASE_COLUMN_PREFIX."description"]),
-												null, // tags
-												true); // public 
-						} else {
-								$uploadedPics[]=html_entity_decode($path);
-								echo "\nUploading '$path'\n";
-						}
+						$uploadedPics[]=$f->sync_upload(
+										html_entity_decode($path),
+										html_entity_decode($child[DATABASE_COLUMN_PREFIX."title"]),
+										html_entity_decode($child[DATABASE_COLUMN_PREFIX."description"]),
+										null, // tags
+										true); // public 
 
 						if (count($uploadedPics)%8) {
 								// every 8 photos, give flickr a break and a chance
@@ -164,11 +157,10 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
 				
 				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
-				if ( ! $dryrun )	
-						$setid=$fes->photosets_create(
-										html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
-										html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
-										$uploadedPics[0]); // use first image as required set primary
+				$setid=$fes->photosets_create(
+								html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
+								html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
+								$uploadedPics[0]); // use first image as required set primary
 				if ( 0 < $setid['id'] )
 					echo 'Failed to create a set!\n';
 				else
@@ -181,8 +173,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								continue;
 						}
 						echo "\tAdding '$pid'\n";
-						if ( ! $dryrun )
-								$fes->photosets_addPhoto($setid['id'],$pid);
+						$fes->photosets_addPhoto($setid['id'],$pid);
 				}
 
 				sleep(3); // take a good fitful sleep after uploading a whole album
