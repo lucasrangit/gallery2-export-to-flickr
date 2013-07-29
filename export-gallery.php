@@ -161,7 +161,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 					die('Failed to create a set!\n');
 				
 				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
-				echo "\t<li>Set URL: ".$setid['url']."</li>\n";
+				echo "\t<li>Set URL: ".$setid['url']." </li>\n";
 				
 				$first = true; // the first photo was already added to the set when created
 				foreach($uploadedPics as $pid) {
