@@ -61,6 +61,9 @@ if ( 1 >= $argc ) {
 }
 
 $die_on_error = true;
+$image_count = 0;
+$start_time = time();
+$finish_time = $start_time;
 
 require_once("phpFlickr.php");
 
@@ -149,22 +152,30 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						// to catch up. Adjust this value if you need to.
 						// Without this sleep, the connection dropped a lot
 						sleep(1);
+						$image_count++;
 				}
 				echo "\t\t</ul></li>\n";
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
 
-				$retry = 10;
-				do {
+				$finish_time = time() - $start_time;
+				echo "Uploaded ".$image_count." images in ".$finish_time." seconds.\n";
+
+				$setid=$fes->photosets_create(
+						html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
+						html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
+						$uploadedPics[0]); // use first image as required set primary
+
+				if ( !is_numeric($setid['id']) ) {
+					$fes = new phpFlickr(API_KEY, SECRET, $die_on_error);
+					$fes->setToken(TOKEN);
 					$setid=$fes->photosets_create(
 							html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
 							html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
 							$uploadedPics[0]); // use first image as required set primary
-					var_dump($setid);
-					sleep(1);
-				} while ( !is_numeric($setid['id']) && $retry-- );
-				
-				if ( !is_numeric($setid['id']) ) 
-					die('Failed to create a set!\n');
+				}
+
+				if ( !is_numeric($setid['id']) )
+					die('Failed to create a set!');
 				
 				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
 				echo "\t<li>Set URL: ".$setid['url']."</li>\n";
