@@ -128,6 +128,7 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 						ORDER BY i.".DATABASE_COLUMN_PREFIX."id";
 				$childern = mysql_query($query);
 				echo "\t\t<ul>\n";
+				$first = true;
 				while ($child = mysql_fetch_assoc($childern)) {
 						$query = "SELECT i.".DATABASE_COLUMN_PREFIX."parentSequence FROM ".DATABASE_TABLE_PREFIX."ItemAttributesMap i WHERE i.".DATABASE_COLUMN_PREFIX."itemId =".$child[DATABASE_COLUMN_PREFIX."id"];
 						$result_temp = mysql_query($query);
@@ -141,54 +142,47 @@ $query = "SELECT i.".DATABASE_COLUMN_PREFIX."title,
 								continue;
 						}
 
-						$uploadedPics[]=$f->sync_upload(
+						$pid = $f->sync_upload(
 										html_entity_decode($path),
 										html_entity_decode($child[DATABASE_COLUMN_PREFIX."title"]),
 										html_entity_decode($child[DATABASE_COLUMN_PREFIX."description"]),
 										null, // tags
 										true); // public 
+						$uploadedPics[] = $pid;
 
 						// give flickr a break and a chance
 						// to catch up. Adjust this value if you need to.
 						// Without this sleep, the connection dropped a lot
 						sleep(1);
 						$image_count++;
+					
+						if ( $first ) {	
+							$first = false;
+							$setid=$fes->photosets_create(
+									html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
+									html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
+									$uploadedPics[0]); // use first image as required set primary
+							if ( !is_numeric($setid['id']) )
+								die('Failed to create a set!');
+						} else {
+							if ( !is_numeric($setid['id']) )
+								die('Failed to create a set!');
+							$fes->photosets_addPhoto($setid['id'],$pid);
+						}
+
 				}
 				echo "\t\t</ul></li>\n";
 				echo "\t<li>Album Total: ".count($uploadedPics)."</li>\n";
 
-				$finish_time = time() - $start_time;
-				echo "Uploaded ".$image_count." images in ".$finish_time." seconds.\n";
-
-				$setid=$fes->photosets_create(
-						html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
-						html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
-						$uploadedPics[0]); // use first image as required set primary
-
-				if ( !is_numeric($setid['id']) ) {
-					$fes = new phpFlickr(API_KEY, SECRET, $die_on_error);
-					$fes->setToken(TOKEN);
-					$setid=$fes->photosets_create(
-							html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"]),
-							html_entity_decode($row[DATABASE_COLUMN_PREFIX."description"]),
-							$uploadedPics[0]); // use first image as required set primary
-				}
-
 				if ( !is_numeric($setid['id']) )
 					die('Failed to create a set!');
-				
+
 				echo "\t<li>Set Title: '".html_entity_decode($row[DATABASE_COLUMN_PREFIX."title"])."'</li>\n";
 				echo "\t<li>Set URL: ".$setid['url']."</li>\n";
-				
-				$first = true; // the first photo was already added to the set when created
-				foreach($uploadedPics as $pid) {
-						if ( $first ) {
-								$first = false;
-								continue;
-						}
-						$fes->photosets_addPhoto($setid['id'],$pid);
-				}
 
+				$finish_time = time() - $start_time;
+                                echo "Uploaded ".$image_count." images in ".$finish_time." seconds.\n";
+	
 				mysql_free_result($childern);
 				echo "</ul>\n";
 		}
